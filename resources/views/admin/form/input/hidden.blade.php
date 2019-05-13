@@ -1,0 +1,1 @@
+<input type="hidden" name="{{ $name }}" value="{{ (isset($input) && isset($input[$name]) ? $input[$name] : (Request::old($name) ? Request::old($name) : "")) }}">

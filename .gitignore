@@ -1,0 +1,13 @@
+/node_modules
+/public/hot
+/public/storage
+/public/image
+/storage/*.key
+/storage/cleanner.sql
+/vendor
+/.idea
+_ide_helper.php
+.env
+composer.lock
+/docker/mysql
+

@@ -46,6 +46,8 @@ class CardController extends Controller {
         $mailer = new MailerOrder($data);
         $mailer->send_admin();
         $mailer->send_user();
+	    $mailer->send_telegram();
+
         foreach ($data['order'] as $datum) {
             ProductLike::addLike($datum['id'],$data['orderid']);
             Product::orderStock($datum['id'], $datum['count']);

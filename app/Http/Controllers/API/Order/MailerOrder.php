@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\API\Order;
 
 
+use App\Classes\TelegramBot;
 use App\Model\Meta;
 use App\Model\Product;
 
@@ -52,6 +53,35 @@ class MailerOrder {
         return $data;
     }
 
+    private function order_information_simple($data) {
+	    $data .= trans('Имя'). ' - ' .$this->order['contacts']['name'] . "\n";
+	    $data .= trans('Номер телефона'). ' - ' .$this->order['contacts']['phone'] . "\n";
+	    $data .= trans('E-mail'). ' - ' .$this->order['contacts']['email'] . "\n";
+
+	    if ($this->order['contacts']['city'])
+		    $data .= trans('Город для доставки'). ' - ' .$this->order['contacts']['city'] . "\n";
+	    if ($this->order['contacts']['office'])
+		    $data .= trans('Отделение новой почты'). ' - ' .$this->order['contacts']['office'] . "\n";
+
+	    $data .= trans('Заказ').":\n";
+
+	    $sum = 0;
+	    foreach ($this->order['order'] as $product) {
+		    $sum += intval($product['count']) * intval($product['price']);
+		    $entity = Product::getSingle($product['id'], []);
+		    $data .= trans('Продукт'). ' - ' .$entity[\H::lang('name')] . "\n";
+		    $data .= trans('Ссылка'). ' - ' .(env('FRONT').'/product/'.$product['id']) . "\n";
+
+		    $data .= trans('Цвет'). ' - ' .$this->search($this->colors, 'id', $product['meta']['color'])[0][\H::lang('name')] . "\n";
+		    $data .= trans('Размер'). ' - ' .$this->search($this->sizes, 'id', $product['meta']['size'])[0][\H::lang('name')] . "\n";
+		    $data .= trans('Количество'). ' - ' .$product['count'] . "\n";
+		    $data .= trans('Цена'). ' - ' .$product['price'] . "\n";
+		    $data .= "------------\n";
+	    }
+	    $data .= trans('Итого').":".$sum."\n";
+	    return $data;
+    }
+
     public function send_admin() {
         try {
             $data = [
@@ -61,18 +91,25 @@ class MailerOrder {
 
             $data = $this->order_information($data);
 
-            $email = (array)\C::val('admin_mail');
-
+            $email = \C::val('admin_mail');
             \Mail::send('email.order', $data, function ($m) use ($email) {
-                $m->from(env('FROM_MAIL'), 'Интернет-магазин');
+	            $m->from(env('FROM_MAIL'), 'Интернет-магазин');
 
                 $m->to($email, 'Admin')->subject('Заказ');
             });
 
             return response()->json(true, 201);
         } catch (\Exception $e) {
+//        	dd($e);
             return response()->json(false, 500);
         }
+    }
+
+    public function send_telegram(){
+	    $data = 'Заказ ' . env('FRONT')."\n";
+
+    	$bot = new TelegramBot();
+    	$bot->send($this->order_information_simple($data));
     }
 
     public function send_user() {
@@ -85,7 +122,6 @@ class MailerOrder {
             $data = $this->order_information($data);
 
             $email = $this->order['contacts']['email'];
-
             \Mail::send('email.order', $data, function ($m) use ($email) {
                 $m->from(env('FROM_MAIL'), 'Интернет-магазин');
 

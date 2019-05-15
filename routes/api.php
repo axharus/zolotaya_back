@@ -71,7 +71,7 @@ Route::get('/catalogs/index/{section}', 'API\CatalogsController@get');
 Route::get('/catalogs/more/{section}/{offset}', 'API\CatalogsController@more');
 
 Route::get('/blog/tags', 'API\BlogController@tags');
-Route::get('/blog/arts/{type}', 'API\BlogController@arts');
+Route::get('/blog/arts', 'API\BlogController@arts');
 Route::get('/blog/single/{id}', 'API\BlogController@single');
 Route::get('/blog/comment/{id}', 'API\BlogController@getComment');
 Route::get('/blog/mini/full', 'API\BlogMiniController@full');

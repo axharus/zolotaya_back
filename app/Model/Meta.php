@@ -51,7 +51,7 @@ class Meta extends BaseModel {
     public static function getCatFourCount($id){
         $meta = new self();
         $meta->section_id = $id;
-        return $meta->withCount('withCatProducts')->where('type', 'cat')->get();
+        return $meta->withCount('withCatProducts')->where('type', 'cat')->orderBy('sort')->get();
     }
 
     public static function getOne($id){

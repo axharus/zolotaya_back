@@ -10,11 +10,15 @@
         "barryvdh/laravel-debugbar": "^2.3",
         "barryvdh/laravel-ide-helper": "^2.2",
         "guzzlehttp/guzzle": "^6.2",
+        "http-interop/http-factory-guzzle": "^1.0",
         "intervention/image": "^2.3",
         "jenssegers/date": "^3.2",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
-        "tymon/jwt-auth": "0.5.*"
+        "php-http/guzzle6-adapter": "^2.0",
+        "tg-bot-api/bot-api-base": "^1.0",
+        "tymon/jwt-auth": "0.5.*",
+        "ext-json": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

@@ -27,8 +27,8 @@ class Blog extends BaseModel {
         return self::where('type', $type)->get();
     }
 
-    public static function getFiltered($type, $filter, $select = ['*']){
-        $query = self::where('type', $type);
+    public static function getFiltered($filter, $select = ['*']){
+        $query = self::query();
 
         Paginator::currentPageResolver(function() use($filter){
             return $filter->page;

@@ -23,9 +23,9 @@ class BlogController extends Controller {
         return response()->json(Meta::getType('tags'), 201);
     }
 
-    public function arts($type, Request $request){
+    public function arts(Request $request){
         $i = json_decode($request->input('filter'));
-        $data = Blog::getFiltered($type, $i);
+        $data = Blog::getFiltered($i);
         $data->each(function ($item){
             $item['tags_data'] = Meta::getWhereIn($item['tags']);
         });

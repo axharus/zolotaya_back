@@ -15,7 +15,7 @@ use Http\Factory\Guzzle\StreamFactory;
 
 class TelegramBot {
 	private $bot;
-	private $userId;
+	private $userId = [];
 
 	public function __construct() {
 		$botKey = env('TELEGRAM_BOT_KEY');
@@ -27,12 +27,18 @@ class TelegramBot {
 		$apiClient = new \TgBotApi\BotApiBase\ApiClient($requestFactory, $streamFactory, $client);
 		$this->bot = new \TgBotApi\BotApiBase\BotApi($botKey, $apiClient, new \TgBotApi\BotApiBase\BotApiNormalizer());
 
-		$this->userId = env('TELEGRAM_BOT_CLIENT');
-
-
+		$this->userId = explode(',',env('TELEGRAM_BOT_CLIENT'));
+//		dd($this->userId);
 	}
 
 	public function send($message){
-		$this->bot->send(\TgBotApi\BotApiBase\Method\SendMessageMethod::create($this->userId, $message));
+		foreach($this->userId as $user){
+			try{
+				$this->bot->send(\TgBotApi\BotApiBase\Method\SendMessageMethod::create($user, $message));
+			}catch (\Exception $e){
+
+			}
+		}
+
 	}
 }
